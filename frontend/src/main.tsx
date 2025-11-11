@@ -1,15 +1,15 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import './i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import DevicesPage from './pages/Devices';
 import './styles.css';
 
-const rootEl = document.getElementById('root')!;
-createRoot(rootEl).render(
+const queryClient = new QueryClient();
+
+createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <DevicesPage />
+    </QueryClientProvider>
   </React.StrictMode>
 );

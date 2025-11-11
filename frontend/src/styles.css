@@ -2,31 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    color-scheme: light dark;
-  }
-  html, body, #root { height: 100%; }
-  body { @apply bg-bg text-slate-200 dark:bg-bg; }
+:root {
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
 }
-
-@layer components {
-  .container { @apply max-w-[720px] mx-auto px-4 pt-[env(safe-area-inset-top)] pb-[calc(16px+env(safe-area-inset-bottom))]; }
-  .nav { @apply sticky top-0 z-50 backdrop-saturate-150 backdrop-blur bg-bg/70 border-b border-white/10; }
-  .nav-inner { @apply flex items-center justify-between gap-2 py-3; }
-  .brand { @apply font-bold tracking-wide; }
-  .grid-auto { @apply grid gap-3 grid-cols-1 md:grid-cols-2; }
-  .card { @apply rounded-xl border border-white/10 bg-card p-3; }
-  .muted { @apply text-slate-400; }
-  .row { @apply flex items-center justify-between gap-2; }
-  .stack { @apply flex flex-col gap-2; }
-  .btn { @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-slate-900 text-white; }
-  .btn-primary { @apply bg-accent text-emerald-950 border-black/10; }
-  .btn-ghost { @apply bg-transparent; }
-  .btn-danger { @apply bg-red-500 border-black/20; }
-  .input { @apply w-full px-3 py-3 rounded-lg border border-white/10 bg-slate-900 outline-none; }
-  .toolbar { @apply flex gap-2 flex-wrap; }
-  .list { @apply flex flex-col gap-2; }
-  .pill { @apply text-xs px-2 py-1 rounded-full bg-slate-900 border border-white/10; }
+body {
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+  background: #f8fafc;
+  color: #0f172a;
 }
-
