@@ -9,8 +9,8 @@ export function useRealtime() {
     const socket = initSocket();
 
     const handler = (payload: any) => {
-      qc.invalidateQueries(['devices']);
-      if (payload?.deviceId) qc.invalidateQueries(['device', payload.deviceId]);
+      qc.invalidateQueries({ queryKey: ['devices'] });
+      if (payload?.deviceId) qc.invalidateQueries({ queryKey: ['device', payload.deviceId] });
     };
 
     socket.on('device:telemetry', handler);

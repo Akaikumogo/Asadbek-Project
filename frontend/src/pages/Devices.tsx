@@ -12,10 +12,19 @@ async function fetchDevices() {
 
 export default function DevicesPage() {
   useRealtime();
-  const { data, isLoading } = useQuery(['devices'], fetchDevices, {
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['devices'],
+    queryFn: fetchDevices,
     refetchOnWindowFocus: false,
-    staleTime: 10000
+    staleTime: 10000,
   });
+
+  if (isError) return (
+    <MobileLayout title="Devices">
+      <div className="p-4 text-red-600">Error: {(error as Error).message}</div>
+    </MobileLayout>
+  );
 
   return (
     <MobileLayout title="Devices">
