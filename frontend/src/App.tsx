@@ -1,31 +1,29 @@
 import { Navigate, Route, Routes, useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Devices from './pages/Devices';
 import DeviceDetail from './pages/DeviceDetail';
 import Pumps from './pages/Pumps';
 import PumpDetail from './pages/PumpDetail';
 import Monitoring from './pages/Monitoring';
+import SplashScreen from './components/SplashScreen';
 import { signOut } from './api';
 import { motion } from 'framer-motion';
 
-function useAuth() {
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  return { isAuthed: !!token };
-}
-
-function Protected({ children }: { children: JSX.Element }) {
-  const { isAuthed } = useAuth();
+function Protected({ children }: { children: React.ReactElement }) {
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
-  if (!isAuthed)
+  if (!isAuthenticated)
     return <Navigate to="/login" replace state={{ from: location }} />;
   return children;
 }
 
 export default function App() {
   const { t, i18n } = useTranslation();
+  const { isLoading } = useAuth();
+  const [showSplash, setShowSplash] = useState(true);
   const [theme, setTheme] = useState<string>(
     () =>
       localStorage.getItem('theme') ||
@@ -33,12 +31,24 @@ export default function App() {
         ? 'dark'
         : 'light')
   );
+  
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') root.classList.add('dark');
     else root.classList.remove('dark');
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => setShowSplash(false), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
+  if (isLoading || showSplash) {
+    return <SplashScreen />;
+  }
 
   function switchLang() {
     const next = i18n.language === 'uz' ? 'en' : 'uz';

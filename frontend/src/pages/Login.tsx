@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { login } from '../api';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
@@ -9,13 +10,15 @@ export default function Login() {
 	const [error, setError] = useState<string | null>(null);
 	const navigate = useNavigate();
 	const location = useLocation() as any;
+	const { login: authLogin } = useAuth();
 
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		setError(null);
 		setLoading(true);
 		try {
-			await login({ email, password });
+			const token = await login({ email, password });
+			authLogin(token);
 			const from = location.state?.from?.pathname || '/';
 			navigate(from, { replace: true });
 		} catch (err: any) {

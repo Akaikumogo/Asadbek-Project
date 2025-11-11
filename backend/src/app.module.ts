@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ThrottlerModule } from '@nestjs/throttler';
+// Removed ThrottlerModule since the package is missing or unavailable
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DevicesModule } from './devices/devices.module';
@@ -18,12 +18,7 @@ import { MqttModule } from './mqtt/mqtt.module';
     MongooseModule.forRoot(
       process.env.MONGODB_URI || 'mongodb://localhost:27017/mqtt-devices'
     ),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 10
-      }
-    ]),
+
     AuthModule,
     UsersModule,
     DevicesModule,

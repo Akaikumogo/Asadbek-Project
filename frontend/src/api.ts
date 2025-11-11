@@ -2,13 +2,19 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 const API_BASE = 'http://localhost:5001/api';
 
-function getToken(): string | null {
-  return localStorage.getItem('token');
-}
+let currentToken: string | null = null;
 
-export function setToken(token: string | null) {
+export function setApiToken(token: string | null) {
+  currentToken = token;
   if (token) localStorage.setItem('token', token);
   else localStorage.removeItem('token');
+}
+
+export function getApiToken(): string | null {
+  if (!currentToken) {
+    currentToken = localStorage.getItem('token');
+  }
+  return currentToken;
 }
 
 export async function apiFetch<T>(
@@ -19,7 +25,7 @@ export async function apiFetch<T>(
     'Content-Type': 'application/json'
   };
   if (opts.auth !== false) {
-    const token = getToken();
+    const token = getApiToken();
     if (token) headers.Authorization = `Bearer ${token}`;
   }
   const res = await fetch(`${API_BASE}${path}`, {
@@ -41,8 +47,8 @@ export async function login(params: { email: string; password: string }) {
     '/auth/login',
     { method: 'POST', body: params, auth: false }
   );
-  setToken(data.access_token);
-  return data;
+  setApiToken(data.access_token);
+  return data.access_token;
 }
 
 // Devices
@@ -102,5 +108,5 @@ export const MonitoringAPI = {
 };
 
 export function signOut() {
-  setToken(null);
+  setApiToken(null);
 }
